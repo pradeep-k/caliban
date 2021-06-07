@@ -1,4 +1,5 @@
 package example
+import caliban.schema.Annotations.GQLInterface
 
 import example.ExampleData.Origin.{ BELT, EARTH, MARS }
 import example.ExampleData.Role.{ Captain, Engineer, Mechanic, Pilot }
@@ -37,8 +38,9 @@ object ExampleData {
     Character("Roberta Draper", List("Bobbie", "Gunny"), MARS, None)
   )
 
+  @GQLInterface
   sealed trait Node {
-  def uuid: String
+    def uuid: String
     def name: String
   }
 

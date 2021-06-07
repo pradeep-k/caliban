@@ -17,7 +17,7 @@ object ExampleService {
 
     def deletedEvents: ZStream[Any, Nothing, String]
     
-    def getMsSqlDatabase(uuid: Option[String]): UIO[List[MsSqlDatabase]]
+    def getMsSqlDatabase(uuid: Option[String]): UIO[List[Node]]
   }
 
   def getCharacters(origin: Option[Origin]): URIO[ExampleService, List[Character]] =
@@ -32,7 +32,7 @@ object ExampleService {
   def deletedEvents: ZStream[ExampleService, Nothing, String] =
     ZStream.accessStream(_.get.deletedEvents)
   
-  def getMsSqlDatabase(uuid: Option[String]): URIO[ExampleService, List[MsSqlDatabase]] =
+  def getMsSqlDatabase(uuid: Option[String]): URIO[ExampleService, List[Node]] =
     URIO.serviceWith(_.getMsSqlDatabase(uuid))
 
 
@@ -46,7 +46,7 @@ object ExampleService {
       def getCharacters(origin: Option[Origin]): UIO[List[Character]] =
         characters.get.map(_.filter(c => origin.forall(c.origin == _)))
   
-      def getMsSqlDatabase(uuid: Option[String]): UIO[List[MsSqlDatabase]] =
+      def getMsSqlDatabase(uuid: Option[String]): UIO[List[Node]] =
         mssqldatabases.get.map(_.filter(c=> uuid.forall(c.uuid == _)))
 
 

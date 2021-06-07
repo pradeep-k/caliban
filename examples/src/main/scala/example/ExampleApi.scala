@@ -27,7 +27,7 @@ object ExampleApi extends GenericSchema[ExampleService] {
     @GQLDeprecated("Use `characters`")
     character: CharacterArgs => URIO[ExampleService, Option[Character]],
     @GQLDescription("Return all characters from all origins")
-    msSqlDatabases: MsSqlDatabaseArgs => URIO[ExampleService, List[MsSqlDatabase]]
+    msSqlDatabases: MsSqlDatabaseArgs => URIO[ExampleService, List[Node]]
 
   )
   case class Mutations(deleteCharacter: CharacterArgs => URIO[ExampleService, Boolean])
@@ -37,7 +37,7 @@ object ExampleApi extends GenericSchema[ExampleService] {
   implicit val characterSchema      = gen[Character]
   implicit val characterArgsSchema  = gen[CharacterArgs]
   implicit val charactersArgsSchema = gen[CharactersArgs]
-  implicit val msSqlDatabaseSchema  = gen[MsSqlDatabase]
+  //implicit val msSqlDatabaseSchema  = gen[MsSqlDatabase]
 
   val api: GraphQL[Console with Clock with ExampleService] =
     graphQL(
