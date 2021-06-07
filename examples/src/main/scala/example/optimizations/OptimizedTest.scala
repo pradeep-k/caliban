@@ -61,9 +61,9 @@ object OptimizedTest extends App with GenericSchema[Console] {
   case class GetUser(id: Int) extends Request[Nothing, User]
   val UserDataSource: DataSource[Console, GetUser] = DataSource.Batched.make("UserDataSource") { requests =>
     requests.toList match {
-      case head :: Nil => putStrLn("getUser").orDie.as(CompletedRequestMap.empty.insert(head)(Right(fakeUser(head.id))))
+      case head :: Nil => putStrLn("getUser").as(CompletedRequestMap.empty.insert(head)(Right(fakeUser(head.id))))
       case list        =>
-        putStrLn("getUsers").orDie.as(list.foldLeft(CompletedRequestMap.empty) { case (map, req) =>
+        putStrLn("getUsers").as(list.foldLeft(CompletedRequestMap.empty) { case (map, req) =>
           map.insert(req)(Right(fakeUser(req.id)))
         })
     }

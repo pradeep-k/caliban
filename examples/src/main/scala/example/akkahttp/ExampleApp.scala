@@ -1,6 +1,7 @@
 package example.akkahttp
 
 import example.ExampleData.sampleCharacters
+import example.ExampleData.sampleMsSqlDatabases
 import example.ExampleService.ExampleService
 import example.{ ExampleApi, ExampleService }
 
@@ -24,7 +25,7 @@ object ExampleApp extends App with AkkaHttpCirceAdapter {
   implicit val system: ActorSystem                        = ActorSystem()
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
   implicit val runtime: Runtime[ExampleService with Console with Clock] =
-    Runtime.unsafeFromLayer(ExampleService.make(sampleCharacters) ++ Console.live ++ Clock.live, Platform.default)
+    Runtime.unsafeFromLayer(ExampleService.make(sampleCharacters, sampleMsSqlDatabases) ++ Console.live ++ Clock.live, Platform.default)
 
   val interpreter = runtime.unsafeRun(ExampleApi.api.interpreter)
 

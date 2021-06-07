@@ -2,6 +2,7 @@ package example.play
 
 import example.{ ExampleApi, ExampleService }
 import example.ExampleData.sampleCharacters
+import example.ExampleData.sampleMsSqlDatabases
 import example.ExampleService.ExampleService
 
 import caliban.PlayRouter
@@ -20,7 +21,7 @@ import zio.random.Random
 object ExampleApp extends App {
 
   implicit val runtime: Runtime[ExampleService with Console with Clock with Blocking with Random] =
-    Runtime.unsafeFromLayer(ExampleService.make(sampleCharacters) ++ Console.live ++ Clock.live ++ Random.live ++ Blocking.live, Platform.default)
+    Runtime.unsafeFromLayer(ExampleService.make(sampleCharacters, sampleMsSqlDatabases) ++ Console.live ++ Clock.live ++ Random.live ++ Blocking.live, Platform.default)
 
   val interpreter = runtime.unsafeRun(ExampleApi.api.interpreter)
 

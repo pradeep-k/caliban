@@ -36,4 +36,42 @@ object ExampleData {
     Character("Josephus Miller", List("Joe"), BELT, None),
     Character("Roberta Draper", List("Bobbie", "Gunny"), MARS, None)
   )
+
+  sealed trait Node {
+  def uuid: String
+    def name: String
+  }
+
+  object Node {
+      def getNodes: List[Node] = List.empty
+      def getNode(uuid: String): Option[Node] = None
+  }
+
+  case class MsSqlDatabase(uuid: String, name: String, databaseUid: String) extends Node
+  case class MsSqlDatabaseInstance(uuid: String, name: String, instanceUid: String) extends Node
+  case class OperatingSystem(uuid: String, name: String, osUid: String, osType: String) extends Node
+  case class VirtualMachine(uuid: String, name: String, vmUid: String) extends Node
+  case class Host(uuid: String, name: String, hostUid: String) extends Node
+  case class Disk(uuid: String, name: String, diskUid: String) extends Node
+  case class Datastore(uuid: String, name: String, datastoreUid: String) extends Node
+  case class Volume(uuid: String, name: String, volumeUid: String) extends Node
+
+
+  case class MsSqlDatabaseArgs(uuid: Option[String])
+  
+  val sampleMsSqlDatabases = List(
+    MsSqlDatabase("uuid0", "db0", "uid0" )
+  )
+  
+  trait Connection {
+    def from: Node
+    def to: Node
+  }
+
+  case class ParentOf(from: Node, to: Node) extends Connection
+  case class RunningOn(from: Node, to: Node) extends Connection
+  case class DependsOn(from: Node, to: Node) extends Connection
+  case class HostedBy(from: Node, to: Node) extends Connection
+  case class FailoverOption(from: Node, to: Node, active: Boolean, standby: Boolean) extends Connection
+
 }

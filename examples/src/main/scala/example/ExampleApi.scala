@@ -25,7 +25,10 @@ object ExampleApi extends GenericSchema[ExampleService] {
     @GQLDescription("Return all characters from a given origin")
     characters: CharactersArgs => URIO[ExampleService, List[Character]],
     @GQLDeprecated("Use `characters`")
-    character: CharacterArgs => URIO[ExampleService, Option[Character]]
+    character: CharacterArgs => URIO[ExampleService, Option[Character]],
+    @GQLDescription("Return all characters from all origins")
+    msSqlDatabases: MsSqlDatabaseArgs => URIO[ExampleService, List[MsSqlDatabase]]
+
   )
   case class Mutations(deleteCharacter: CharacterArgs => URIO[ExampleService, Boolean])
   case class Subscriptions(characterDeleted: ZStream[ExampleService, Nothing, String])
@@ -34,13 +37,15 @@ object ExampleApi extends GenericSchema[ExampleService] {
   implicit val characterSchema      = gen[Character]
   implicit val characterArgsSchema  = gen[CharacterArgs]
   implicit val charactersArgsSchema = gen[CharactersArgs]
+  implicit val msSqlDatabaseSchema  = gen[MsSqlDatabase]
 
   val api: GraphQL[Console with Clock with ExampleService] =
     graphQL(
       RootResolver(
         Queries(
           args => ExampleService.getCharacters(args.origin),
-          args => ExampleService.findCharacter(args.name)
+          args => ExampleService.findCharacter(args.name),
+          args => ExampleService.getMsSqlDatabase(args.uuid)
         ),
         Mutations(args => ExampleService.deleteCharacter(args.name)),
         Subscriptions(ExampleService.deletedEvents)

@@ -26,6 +26,6 @@ object ExampleApp extends App {
                        )
                        .forever
     } yield ())
-      .provideCustomLayer(ExampleService.make(sampleCharacters))
+      .provideCustomLayer(ExampleService.make(sampleCharacters, sampleMsSqlDatabases))
       .exitCode
 }
