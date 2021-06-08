@@ -97,6 +97,6 @@ object ExampleData {
   
   case class TopologyArgs(nodeType: NodeType)
 
-  val emptyList = List[Connection]();
+  val sampleEdges = List[Connection](ParentOf((MsSqlDatabase("uuid0", "db0", "uid0")), (Volume("uuid2", "db2", "uid2"))));
   //val sampleTopology = Topology(sampleMsSqlDatabases, emptyList);
 }

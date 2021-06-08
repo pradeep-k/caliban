@@ -45,7 +45,7 @@ object ExampleService {
     (for {
       characters  <- Ref.make(initial)
       mssqldatabases  <- Ref.make(initial1)
-      topology <- Ref.make(Topology(initial1, List[Connection]()))
+      topology <- Ref.make(Topology(initial1, sampleEdges))
       subscribers <- Hub.unbounded[String]
     } yield new Service {
 
