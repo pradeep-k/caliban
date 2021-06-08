@@ -6,6 +6,7 @@ import example.ExampleData.Role.{ Captain, Engineer, Mechanic, Pilot }
 
 object ExampleData {
 
+
   sealed trait Origin
 
   object Origin {
@@ -37,6 +38,19 @@ object ExampleData {
     Character("Josephus Miller", List("Joe"), BELT, None),
     Character("Roberta Draper", List("Bobbie", "Gunny"), MARS, None)
   )
+  
+  sealed trait NodeType
+
+  object NodeType {
+    case object  MSSQLDATABASE extends NodeType
+    case object  MSSQLINSTANCE extends NodeType 
+    case object  OS            extends NodeType 
+    case object  VM            extends NodeType 
+    case object  HOST          extends NodeType 
+    case object  DISK          extends NodeType 
+    case object  DATASTORE     extends NodeType 
+    case object  VOLUME        extends NodeType
+  }
 
   @GQLInterface
   sealed trait Node {
@@ -62,7 +76,9 @@ object ExampleData {
   case class MsSqlDatabaseArgs(uuid: Option[String])
   
   val sampleMsSqlDatabases = List(
-    MsSqlDatabase("uuid0", "db0", "uid0" )
+    MsSqlDatabase("uuid0", "db0", "uid0"),
+    MsSqlDatabase("uuid1", "db1", "uid1"),
+    Volume("uuid2", "db2", "uid2")
   )
   
   trait Connection {
@@ -76,4 +92,12 @@ object ExampleData {
   case class HostedBy(from: Node, to: Node) extends Connection
   case class FailoverOption(from: Node, to: Node, active: Boolean, standby: Boolean) extends Connection
 
+  case class Topology(vertex: List[Node])
+  
+  case class TopologyArgs(nodeType: NodeType)
+
+  //var emptyList = List
+  val sampleTopology = Topology(
+    sampleMsSqlDatabases);
+    //, List[Connection]());
 }

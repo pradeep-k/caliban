@@ -26,8 +26,10 @@ object ExampleApi extends GenericSchema[ExampleService] {
     characters: CharactersArgs => URIO[ExampleService, List[Character]],
     @GQLDeprecated("Use `characters`")
     character: CharacterArgs => URIO[ExampleService, Option[Character]],
-    @GQLDescription("Return all characters from all origins")
-    msSqlDatabases: MsSqlDatabaseArgs => URIO[ExampleService, List[Node]]
+    @GQLDescription("Return nodes")
+    msSqlDatabases: MsSqlDatabaseArgs => URIO[ExampleService, List[Node]],
+    @GQLDescription("Return topology")
+    topology: TopologyArgs => URIO[ExampleService, Topology]
 
   )
   case class Mutations(deleteCharacter: CharacterArgs => URIO[ExampleService, Boolean])
@@ -38,6 +40,7 @@ object ExampleApi extends GenericSchema[ExampleService] {
   implicit val characterArgsSchema  = gen[CharacterArgs]
   implicit val charactersArgsSchema = gen[CharactersArgs]
   //implicit val msSqlDatabaseSchema  = gen[MsSqlDatabase]
+  implicit val topologySchema  = gen[Topology]
 
   val api: GraphQL[Console with Clock with ExampleService] =
     graphQL(
@@ -45,7 +48,8 @@ object ExampleApi extends GenericSchema[ExampleService] {
         Queries(
           args => ExampleService.getCharacters(args.origin),
           args => ExampleService.findCharacter(args.name),
-          args => ExampleService.getMsSqlDatabase(args.uuid)
+          args => ExampleService.getMsSqlDatabase(args.uuid),
+          args => ExampleService.getTopology(args.nodeType)
         ),
         Mutations(args => ExampleService.deleteCharacter(args.name)),
         Subscriptions(ExampleService.deletedEvents)
