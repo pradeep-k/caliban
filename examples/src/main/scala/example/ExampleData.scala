@@ -81,7 +81,8 @@ object ExampleData {
     Volume("uuid2", "db2", "uid2")
   )
   
-  trait Connection {
+  @GQLInterface
+  sealed trait Connection {
     def from: Node
     def to: Node
   }
@@ -92,12 +93,10 @@ object ExampleData {
   case class HostedBy(from: Node, to: Node) extends Connection
   case class FailoverOption(from: Node, to: Node, active: Boolean, standby: Boolean) extends Connection
 
-  case class Topology(vertex: List[Node])
+  case class Topology(vertex: List[Node], edges: List[Connection])
   
   case class TopologyArgs(nodeType: NodeType)
 
-  //var emptyList = List
-  val sampleTopology = Topology(
-    sampleMsSqlDatabases);
-    //, List[Connection]());
+  val emptyList = List[Connection]();
+  //val sampleTopology = Topology(sampleMsSqlDatabases, emptyList);
 }
