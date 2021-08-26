@@ -20,6 +20,7 @@ object ExampleService {
     def getMsSqlDatabase(uuid: Option[String]): UIO[List[Node]]
     
     def getTopology(nodeType: NodeType): UIO[Topology]
+    def getTopology1(nodeType: NodeType): UIO[Topology1]
   }
 
   def getCharacters(origin: Option[Origin]): URIO[ExampleService, List[Character]] =
@@ -40,12 +41,16 @@ object ExampleService {
   def getTopology(nodeType: NodeType): URIO[ExampleService, Topology] =
     URIO.serviceWith(_.getTopology(nodeType))
 
+  def getTopology1(nodeType: NodeType): URIO[ExampleService, Topology1] =
+    URIO.serviceWith(_.getTopology1(nodeType))
+
 
   def make(initial: List[Character], initial1: List[Node]): ZLayer[Any, Nothing, ExampleService] =
     (for {
       characters  <- Ref.make(initial)
       mssqldatabases  <- Ref.make(initial1)
-      topology <- Ref.make(Topology(initial1, sampleEdges))
+      topology <- Ref.make(sampleTopology)
+      topology1 <- Ref.make(sampleTopology1)
       subscribers <- Hub.unbounded[String]
     } yield new Service {
 
@@ -57,6 +62,9 @@ object ExampleService {
 
       def getTopology(nodeType: NodeType): UIO[Topology] =
         topology.get;
+      
+      def getTopology1(nodeType: NodeType): UIO[Topology1] =
+        topology1.get;
 
       def findCharacter(name: String): UIO[Option[Character]] = characters.get.map(_.find(c => c.name == name))
 

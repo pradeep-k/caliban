@@ -38,7 +38,8 @@ object ExampleData {
     Character("Josephus Miller", List("Joe"), BELT, None),
     Character("Roberta Draper", List("Bobbie", "Gunny"), MARS, None)
   )
-  
+
+  /*********************** NEW CODE *********************/ 
   sealed trait NodeType
 
   object NodeType {
@@ -78,7 +79,39 @@ object ExampleData {
   val sampleMsSqlDatabases = List(
     MsSqlDatabase("uuid0", "db0", "uid0"),
     MsSqlDatabase("uuid1", "db1", "uid1"),
-    Volume("uuid2", "db2", "uid2")
+    //Volume("uuid2", "db2", "uid2")
+  )
+  
+  val sampleMsSqlDatabaseInstances = List(
+    MsSqlDatabaseInstance("uuid2", "dbi1", "uid2"),
+    MsSqlDatabaseInstance("uuid3", "dbi2", "uid3"),
+  )
+  val sampleOperatingSystems = List(
+    OperatingSystem("uuid4", "os1", "uid4", "windows"),
+    OperatingSystem("uuid5", "os2", "uid5", "Linux"),
+  )
+  
+  val sampleVirtualMachines = List(
+    VirtualMachine("uuid6", "vm1", "uid6"),
+    VirtualMachine("uuid7", "vm2", "uid7"),
+  )
+  
+  val sampleHosts = List(
+    Host("uuid8", "host1", "uid8"),
+    Host("uuid9", "host2", "uid9"),
+  )
+  
+  val sampleDisks = List(
+    Disk("uuid10", "host1", "uid8"),
+    Disk("uuid11", "host2", "uid9"),
+  )
+  val sampleDatastores = List(
+    Datastore("uuid12", "host1", "uid8"),
+    Datastore("uuid13", "host2", "uid9"),
+  )
+  val sampleVolumes = List(
+    Volume("uuid14", "vol1", "uid8"),
+    Volume("uuid15", "vol2", "uid9"),
   )
   
   @GQLInterface
@@ -93,10 +126,34 @@ object ExampleData {
   case class HostedBy(from: Node, to: Node) extends Connection
   case class FailoverOption(from: Node, to: Node, active: Boolean, standby: Boolean) extends Connection
 
-  case class Topology(vertex: List[Node], edges: List[Connection])
-  
+  case class Topology(vertices: List[Node], edges: List[Connection])
   case class TopologyArgs(nodeType: NodeType)
 
+  case class Topology1 (
+      msSqlDatabases:         List[MsSqlDatabase], 
+      msSqlDatabaseInstances: List[MsSqlDatabaseInstance],
+      operatingSystems:       List[OperatingSystem],
+      virtualMachines:        List[VirtualMachine],
+      hosts:                  List[Host],
+      disks:                  List[Disk],
+      datastores:             List[Datastore],
+      volumes:                List[Volume],
+      edges:                  List[Connection]
+      )
+
   val sampleEdges = List[Connection](ParentOf((MsSqlDatabase("uuid0", "db0", "uid0")), (Volume("uuid2", "db2", "uid2"))));
-  //val sampleTopology = Topology(sampleMsSqlDatabases, emptyList);
+  val sampleTopology = Topology(
+      sampleMsSqlDatabases:::sampleMsSqlDatabaseInstances:::sampleOperatingSystems:::sampleVirtualMachines:::sampleHosts:::sampleDisks:::sampleDatastores:::sampleVolumes,
+      sampleEdges);
+  val sampleTopology1 = Topology1(
+            sampleMsSqlDatabases, 
+            sampleMsSqlDatabaseInstances, 
+            sampleOperatingSystems, 
+            sampleVirtualMachines,
+            sampleHosts,
+            sampleDisks,
+            sampleDatastores,
+            sampleVolumes,
+            sampleEdges
+            );
 }

@@ -22,14 +22,16 @@ import scala.language.postfixOps
 object ExampleApi extends GenericSchema[ExampleService] {
 
   case class Queries(
+    @GQLDescription("Return topology")
+    topology: TopologyArgs => URIO[ExampleService, Topology],
+    @GQLDescription("Return topology1")
+    topology1: TopologyArgs => URIO[ExampleService, Topology1],
+    @GQLDescription("Return nodes")
+    msSqlDatabases: MsSqlDatabaseArgs => URIO[ExampleService, List[Node]],
     @GQLDescription("Return all characters from a given origin")
     characters: CharactersArgs => URIO[ExampleService, List[Character]],
     @GQLDeprecated("Use `characters`")
-    character: CharacterArgs => URIO[ExampleService, Option[Character]],
-    @GQLDescription("Return nodes")
-    msSqlDatabases: MsSqlDatabaseArgs => URIO[ExampleService, List[Node]],
-    @GQLDescription("Return topology")
-    topology: TopologyArgs => URIO[ExampleService, Topology]
+    character: CharacterArgs => URIO[ExampleService, Option[Character]]
 
   )
   case class Mutations(deleteCharacter: CharacterArgs => URIO[ExampleService, Boolean])
@@ -46,10 +48,11 @@ object ExampleApi extends GenericSchema[ExampleService] {
     graphQL(
       RootResolver(
         Queries(
-          args => ExampleService.getCharacters(args.origin),
-          args => ExampleService.findCharacter(args.name),
+          args => ExampleService.getTopology(args.nodeType),
+          args => ExampleService.getTopology1(args.nodeType),
           args => ExampleService.getMsSqlDatabase(args.uuid),
-          args => ExampleService.getTopology(args.nodeType)
+          args => ExampleService.getCharacters(args.origin),
+          args => ExampleService.findCharacter(args.name)
         ),
         Mutations(args => ExampleService.deleteCharacter(args.name)),
         Subscriptions(ExampleService.deletedEvents)
